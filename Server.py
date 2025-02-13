@@ -43,6 +43,7 @@ HTML_TEMPLATE = """
                     <td>${item.disk_usage}</td>
                     <td>${item.process_running ? '✔️' : '❌'}</td>
                     <td>${item.process_version}</td>
+                    <td>${item.zombie_status ? '✔️' : '❌'}</td>
                     <td>${item.timestamp}</td>
                 </tr>`;
                 tableBody.innerHTML += row;
@@ -62,6 +63,7 @@ HTML_TEMPLATE = """
             <th>Dysk (%)</th>
             <th>Proces</th>
             <th>Wersja procesu</th>
+            <th>Status Zawieszenia</th>
             <th>Ostatnia aktualizacja</th>
         </tr>
         <tbody id="data-body">
@@ -87,6 +89,7 @@ def data():
     disk_usage = data[3]
     process_running = data[4]
     process_version = data[5]
+    zombie_status = data[6]
 
     if host not in [item['host'] for item in data_list]:
         data_list.append({
@@ -96,6 +99,7 @@ def data():
             "disk_usage": disk_usage,
             "process_running": process_running,
             "process_version": process_version,
+            "zombie_status": zombie_status,
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
     })
     else:
@@ -105,6 +109,8 @@ def data():
                 item['ram_usage'] = ram_usage
                 item['disk_usage'] = disk_usage
                 item['process_running'] = process_running
+                item['process_version'] = process_version
+                item['zombie_status'] = zombie_status
                 item['timestamp'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     return jsonify({"status": "OK"})
 

@@ -14,7 +14,7 @@ import subprocess
 parser = argparse.ArgumentParser(description="Client for monitoring system")
 parser.add_argument("--server", type=str, default="0.0.0.0", help="Server address",required=True)
 parser.add_argument("--port", type=int, default=8090, help="Port number")
-parser.add_argument("--interval", type=int, default=10, help="Time interval in seconds")
+parser.add_argument("--interval", type=int, default=10,choices=(5,3600) , help="Time interval in seconds range(5,3600)")
 args = parser.parse_args()
 
 
@@ -49,6 +49,16 @@ def is_process_running(process_name):
             continue
     return False
 
+def get_process_zombieStatus(process_name):
+    for proc in psutil.process_iter(attrs=['name', 'status']):
+        try:
+            if proc.info['name'].lower() == process_name.lower() or proc.info['name'].lower() == f"{process_name}.exe":
+                if proc.info['status'] == psutil.STATUS_ZOMBIE:
+                    return True
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            continue
+    return False
+
 def get_process_version(process_name):
     for proc in psutil.process_iter(attrs=['name', 'exe']):
         try:
@@ -72,8 +82,13 @@ def get_Clinet_IP():
         print(f"Error getting IP: {e}")
         return "Unknown"
 def get_system_info():
-    proccess_running = is_process_running(PROCESS_NAME)
-    return get_Clinet_IP(),psutil.cpu_percent(interval=10), psutil.virtual_memory().percent, psutil.disk_usage(get_disk_path()).percent, proccess_running, get_process_version(PROCESS_NAME)
+
+    return (get_Clinet_IP(),psutil.cpu_percent(interval=10),
+            psutil.virtual_memory().percent,
+            psutil.disk_usage(get_disk_path()).percent,
+            is_process_running(PROCESS_NAME),
+            get_process_version(PROCESS_NAME),
+            get_process_zombieStatus(PROCESS_NAME))
 
 def SendToServer():
     while True:
