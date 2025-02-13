@@ -32,6 +32,16 @@ def get_disk_path():
         return "/"
 
 
+def get_latest_podman_version():
+    try:
+        response = requests.get("https://api.github.com/repos/containers/podman/releases/latest")
+        response.raise_for_status()
+        latest_version = response.json().get("tag_name", "").lstrip("v")
+        return latest_version
+    except Exception as e:
+        print(f"Error getting latest Podman version: {e}")
+        return None
+
 def is_process_running(process_name):
     process_name = process_name.lower()
     is_windows = platform.system() == "Windows"
@@ -77,6 +87,11 @@ def get_process_version(process_name):
             continue
     return "Version not found"
 
+def podman_update():
+    latest_version = get_latest_podman_version()
+    installed_version = get_process_version(PROCESS_NAME).strip("podman-")
+    print(f"Latest version: {latest_version}")
+    print(f"Installed version: {installed_version}")
 def get_Clinet_IP():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -107,5 +122,5 @@ def SendToServer():
     time.sleep(INTERVAL)
 
 
-
+podman_update()
 SendToServer()
