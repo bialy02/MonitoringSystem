@@ -38,7 +38,12 @@ def get_latest_podman_version():
         lines = result.stdout.split("\n")
         for line in lines:
             if "Candidate:" in line:
-                return line.split(":")[1].strip()
+                avaliable_version = line.split(":")[1].strip()
+
+            if "Installed:" in line:
+                installed_version =  line.split(":")[1].strip()
+
+        return (avaliable_version,installed_version)
     except subprocess.CalledProcessError as e:
         print(f"Błąd podczas sprawdzania wersji Podmana: {e}")
     return None
@@ -89,13 +94,12 @@ def get_process_version(process_name):
     return "Version not found"
 
 def podman_update():
-    latest_version = get_latest_podman_version()
-    installed_version = get_process_version(PROCESS_NAME).strip("podman- version")
+    =
     print(f"Latest version: {latest_version}")
     print(f"Installed version: {installed_version}")
     if latest_version != installed_version:
         print("Updating Podman")
-        subprocess.run(["podman", "upgrade", "--latest"])
+
 def get_Clinet_IP():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
