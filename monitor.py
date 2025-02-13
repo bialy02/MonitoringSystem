@@ -71,9 +71,8 @@ def get_Clinet_IP():
         print(f"Error getting IP: {e}")
         return "Unknown"
 def get_system_info():
-    disk_path = get_disk_path()
     proccess_running = is_process_running(PROCESS_NAME)
-    return get_Clinet_IP(),psutil.cpu_percent(interval=10), psutil.virtual_memory().percent, psutil.disk_usage(get_disk_path()).percent, proccess_running
+    return get_Clinet_IP(),psutil.cpu_percent(interval=10), psutil.virtual_memory().percent, psutil.disk_usage(get_disk_path()).percent, proccess_running, get_process_version(PROCESS_NAME)
 
 def SendToServer():
     while True:

@@ -42,6 +42,7 @@ HTML_TEMPLATE = """
                     <td>${item.ram_usage}</td>
                     <td>${item.disk_usage}</td>
                     <td>${item.process_running ? '✔️' : '❌'}</td>
+                    <td>${item.process_version}</td>
                     <td>${item.timestamp}</td>
                 </tr>`;
                 tableBody.innerHTML += row;
@@ -84,6 +85,7 @@ def data():
     ram_usage = data[2]
     disk_usage = data[3]
     process_running = data[4]
+    process_version = data[5]
 
     if host not in [item['host'] for item in data_list]:
         data_list.append({
@@ -92,6 +94,7 @@ def data():
             "ram_usage": ram_usage,
             "disk_usage": disk_usage,
             "process_running": process_running,
+            "process_version": "Version not found",
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
     })
     else:
