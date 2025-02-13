@@ -98,7 +98,9 @@ def podman_update():
     print(f"Latest version: {latest_version}")
     print(f"Installed version: {installed_version}")
     if latest_version != installed_version:
-        print("Updating Podman")
+        print("Updating Podman...")
+        subprocess.run(["sudo", "apt", "update"], check=True)
+        subprocess.run(["sudo", "apt", "install", "--only-upgrade", "-y", "podman"], check=True)
 
 def get_Clinet_IP():
     try:
