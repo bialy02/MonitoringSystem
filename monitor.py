@@ -8,6 +8,7 @@ import time
 import platform
 import requests
 import argparse
+import subprocess
 
 parser = argparse.ArgumentParser(description="Client for monitoring system")
 parser.add_argument("--server", type=str, default="0.0.0.0", help="Server address",required=True)
@@ -40,10 +41,24 @@ def is_process_running(process_name):
                     return True
             else:
                 if proc_name == process_name:
+
                     return True
+
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             continue
     return False
+
+def get_process_version(process_name):
+    for proc in psutil.process_iter(attrs=['name', 'exe']):
+        try:
+            if proc.info['name'].lower() == process_name.lower() or proc.info['name'].lower() == f"{process_name}.exe":
+                process_path = proc.info['exe']
+                if process_path:
+                    result = subprocess.run([process_path, "--version"], capture_output=True, text=True)
+                    return result.stdout.strip()
+        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+            continue
+    return "Version not found"
 
 def get_Clinet_IP():
     try:
@@ -70,4 +85,8 @@ def SendToServer():
 
     time.sleep(INTERVAL)
 
+
+
 SendToServer()
+process_version = get_process_version(PROCESS_NAME)
+print(f"Firefox version: {process_version}")
