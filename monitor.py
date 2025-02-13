@@ -41,7 +41,7 @@ def get_latest_podman_version():
                 avaliable_version = line.split(":")[1].strip()
 
             if "Installed:" in line:
-                installed_version =  line.split(":")[1].strip()
+                installed_version = line.split(":")[1].strip()
 
         return (avaliable_version,installed_version)
     except subprocess.CalledProcessError as e:
@@ -94,7 +94,7 @@ def get_process_version(process_name):
     return "Version not found"
 
 def podman_update():
-    =
+    latest_version, installed_version = get_latest_podman_version()
     print(f"Latest version: {latest_version}")
     print(f"Installed version: {installed_version}")
     if latest_version != installed_version:
