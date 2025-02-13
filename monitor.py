@@ -10,6 +10,7 @@ parser.add_argument("--server", type=str, default="0.0.0.0", help="Server addres
 parser.add_argument("--port", type=int, default=8090, help="Port number")
 args = parser.parse_args()
 
+
 SERVER_IP = args.server
 SERVER_PORT = args.port
 PROCESS_NAME = ".exe"

@@ -11,6 +11,7 @@ Host = args.host
 Port = args.port
 
 data_list = []
+
 print(f"Serwer aktywny na adresie: {Host}:{Port}")
 
 app= Flask(__name__)
