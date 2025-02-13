@@ -64,7 +64,7 @@ HTML_TEMPLATE = """
             <th>Proces</th>
             <th>Wersja procesu</th>
             <th>Status Zawieszenia</th>
-            <th>Ostatnia aktualizacja</th>
+            <th>Ostatnia aktualizacja o parametrach klienta</th>
         </tr>
         <tbody id="data-body">
         </tbody>
