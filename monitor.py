@@ -12,12 +12,13 @@ import argparse
 parser = argparse.ArgumentParser(description="Client for monitoring system")
 parser.add_argument("--server", type=str, default="0.0.0.0", help="Server address",required=True)
 parser.add_argument("--port", type=int, default=8090, help="Port number")
+parser.add_argument("--interval", type=int, default=10, help="Time interval in seconds")
 args = parser.parse_args()
 
 
 SERVER_IP = args.server
 SERVER_PORT = args.port
-
+INTERVAL = args.interval
 
 
 def get_disk_path():
@@ -67,6 +68,6 @@ def SendToServer():
         except:
             print("Nie udalo sie wyslac zapytania")
 
-    time.sleep(10)
+    time.sleep(INTERVAL)
 
 SendToServer()
