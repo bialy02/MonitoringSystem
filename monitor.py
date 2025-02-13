@@ -1,7 +1,7 @@
 
 # Change PROCESS_NAME to the name of the process you want to monitor
 #PROCESS_NAME = "PLACEHOLDER_PROCESS_NAME"
-PROCESS_NAME = "Firefox"
+PROCESS_NAME = "podman"
 
 import socket
 import psutil
