@@ -95,7 +95,7 @@ def data():
             "ram_usage": ram_usage,
             "disk_usage": disk_usage,
             "process_running": process_running,
-            "process_version": "Version not found",
+            "process_version": process_version,
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
     })
     else:
