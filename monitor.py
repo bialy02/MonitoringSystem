@@ -1,3 +1,7 @@
+
+# Change PROCESS_NAME to the name of the process you want to monitor
+PROCESS_NAME = "PLACEHOLDER_PROCESS_NAME"
+
 import socket
 import psutil
 import time
@@ -13,7 +17,8 @@ args = parser.parse_args()
 
 SERVER_IP = args.server
 SERVER_PORT = args.port
-PROCESS_NAME = ".exe"
+
+
 
 def get_disk_path():
     if platform.system() == "Windows":

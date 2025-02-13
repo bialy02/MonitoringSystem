@@ -12,7 +12,7 @@ Port = args.port
 
 data_list = []
 
-print(f"Serwer aktywny na adresie: {Host}:{Port}")
+#print(f"Serwer aktywny na adresie: {Host}:{Port}")
 
 app= Flask(__name__)
 
@@ -106,6 +106,9 @@ def data():
 
 if __name__ == "__main__":
     app.run(host=Host, port=Port)
+
+
+
 
 
 
