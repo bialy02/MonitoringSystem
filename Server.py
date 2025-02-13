@@ -61,7 +61,7 @@ HTML_TEMPLATE = """
             <th>RAM (%)</th>
             <th>Dysk (%)</th>
             <th>Proces</th>
-            th>Wersja procesu</th>
+            <th>Wersja procesu</th>
             <th>Ostatnia aktualizacja</th>
         </tr>
         <tbody id="data-body">
