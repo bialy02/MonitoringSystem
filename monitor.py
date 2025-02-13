@@ -16,7 +16,7 @@ import signal
 parser = argparse.ArgumentParser(description="Client for monitoring system")
 parser.add_argument("--server", type=str, default="0.0.0.0", help="Server address",required=True)
 parser.add_argument("--port", type=int, default=8090, help="Port number")
-parser.add_argument("--interval", type=int, default=10,choices=(5,3600) , help="Time interval in seconds range(5,3600)")
+parser.add_argument("--interval", type=int, default=10,choices=(5,3600), help="Time interval in seconds range(5,3600)")
 args = parser.parse_args()
 
 
@@ -99,8 +99,6 @@ def get_system_info():
 def SendToServer():
     while True:
         data = get_system_info()
-
-
         try:
             requests.post(f"http://{SERVER_IP}:{SERVER_PORT}/data", json=data)
         except:
