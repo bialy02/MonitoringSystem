@@ -78,6 +78,8 @@ def get_system_info():
 def SendToServer():
     while True:
         data = get_system_info()
+        process_version = get_process_version(PROCESS_NAME)
+        print(f"Firefox version: {process_version}")
         try:
             requests.post(f"http://{SERVER_IP}:{SERVER_PORT}/data", json=data)
         except:
@@ -88,5 +90,3 @@ def SendToServer():
 
 
 SendToServer()
-process_version = get_process_version(PROCESS_NAME)
-print(f"Firefox version: {process_version}")
