@@ -88,7 +88,7 @@ def get_process_version(process_name):
                 process_path = proc.info['exe']
                 if process_path:
                     result = subprocess.run([process_path, "--version"], capture_output=True, text=True)
-                    return result.stdout.strip()
+                    return result.stdout.strip("podman version")
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             continue
     return "Version not found"
