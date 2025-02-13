@@ -10,7 +10,6 @@ import platform
 import requests
 import argparse
 import subprocess
-import ctypes
 import os
 import signal
 
@@ -54,19 +53,7 @@ def is_process_running(process_name):
 
 def get_process_zombieStatus(process_name):
     system_platform = platform.system()
-    if system_platform == "Windows":
-        try:
-            for proc in psutil.process_iter(attrs=['name', 'pid']):
-                if proc.info['name'].lower() == process_name.lower() or proc.info['name'].lower() == f"{process_name}.exe":
-                    handle = ctypes.windll.kernel32.OpenProcess(0x1000, False, proc.info['pid'])
-                    if handle:
-                        response = ctypes.windll.kernel32.WaitForSingleObject(handle, 0)
-                        ctypes.windll.kernel32.CloseHandle(handle)
-                        return response == 0xFFFFFFFF
-        except Exception as e:
-            print(f"Error checking process hang status: {e}")
-            return False
-    elif system_platform == "Linux":
+    if system_platform == "Linux":
         for proc in psutil.process_iter(attrs=['name', 'pid', 'status']):
             try:
                 if proc.info['name'].lower() == process_name.lower():
