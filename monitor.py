@@ -10,6 +10,9 @@ import platform
 import requests
 import argparse
 import subprocess
+import ctypes
+import os
+import signal
 
 parser = argparse.ArgumentParser(description="Client for monitoring system")
 parser.add_argument("--server", type=str, default="0.0.0.0", help="Server address",required=True)
@@ -50,13 +53,29 @@ def is_process_running(process_name):
     return False
 
 def get_process_zombieStatus(process_name):
-    for proc in psutil.process_iter(attrs=['name', 'status']):
+    system_platform = platform.system()
+    if system_platform == "Windows":
         try:
-            if proc.info['name'].lower() == process_name.lower() or proc.info['name'].lower() == f"{process_name}.exe":
-                if proc.info['status'] == psutil.STATUS_ZOMBIE:
-                    return True
-        except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-            continue
+            for proc in psutil.process_iter(attrs=['name', 'pid']):
+                if proc.info['name'].lower() == process_name.lower() or proc.info['name'].lower() == f"{process_name}.exe":
+                    handle = ctypes.windll.kernel32.OpenProcess(0x1000, False, proc.info['pid'])
+                    if handle:
+                        response = ctypes.windll.kernel32.WaitForSingleObject(handle, 0)
+                        ctypes.windll.kernel32.CloseHandle(handle)
+                        return response == 0xFFFFFFFF
+        except Exception as e:
+            print(f"Error checking process hang status: {e}")
+            return False
+    elif system_platform == "Linux":
+        for proc in psutil.process_iter(attrs=['name', 'pid', 'status']):
+            try:
+                if proc.info['name'].lower() == process_name.lower():
+                    if proc.info['status'] == psutil.STATUS_STOPPED:
+                        return True
+                    os.kill(proc.info['pid'], signal.SIGCONT)
+                    return False
+            except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
+                continue
     return False
 
 def get_process_version(process_name):
@@ -93,8 +112,8 @@ def get_system_info():
 def SendToServer():
     while True:
         data = get_system_info()
-        process_version = get_process_version(PROCESS_NAME)
-        print(f"Firefox version: {process_version}")
+
+
         try:
             requests.post(f"http://{SERVER_IP}:{SERVER_PORT}/data", json=data)
         except:
