@@ -110,6 +110,7 @@ def data():
             "process_running": process_running,
             "process_version": process_version,
             "zombie_status": zombie_status,
+            "containers_statu": containers_status,
             "timestamp": time.strftime("%Y-%m-%d %H:%M:%S", time.localtime()),
     })
     else:
@@ -121,6 +122,7 @@ def data():
                 item['process_running'] = process_running
                 item['process_version'] = process_version
                 item['zombie_status'] = zombie_status
+                item['containers_status'] = containers_status
                 item['timestamp'] = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
     return jsonify({"status": "OK"})
 
