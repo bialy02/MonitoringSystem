@@ -105,13 +105,14 @@ def podman_update():
 
 def get_podman_containers_status():
     try:
-        result = subprocess.run(["podman", "ps", "-a", "--format", "{{.Names}} {{.State}}"], capture_output=True, text=True, check=True)
+        result = subprocess.run(["podman", "ps", "-a", "--format", "{{.IMAGE}} {{.State}}"], capture_output=True, text=True, check=True)
         containers = []
         for line in result.stdout.strip().split("\n"):
             if line.strip():
                 parts = line.split(maxsplit=1)
                 if len(parts) == 2:
                     name, status = parts
+                    name = name.split("/")[-1]
                     containers.append({"name": name, "status": status})
         return containers
     except subprocess.CalledProcessError as e:
