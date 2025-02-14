@@ -102,6 +102,14 @@ def podman_update():
         subprocess.run(["sudo", "apt", "update"], check=True)
         subprocess.run(["sudo", "apt", "install", "--only-upgrade", "-y", "podman"], check=True)
 
+
+def get_podman_containers_status():
+    try:
+        result = subprocess.run(["podman", "ps", "--all"], capture_output=True, text=True, check=True)
+        return result.stdout
+    except subprocess.CalledProcessError as e:
+        print(f"Błąd podczas sprawdzania statusu kontenerów Podmana: {e}")
+    return None
 def get_Clinet_IP():
     try:
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -119,7 +127,8 @@ def get_system_info():
             psutil.disk_usage(get_disk_path()).percent,
             is_process_running(PROCESS_NAME),
             get_process_version(PROCESS_NAME),
-            get_process_zombieStatus(PROCESS_NAME))
+            get_process_zombieStatus(PROCESS_NAME),
+            get_podman_containers_status())
 
 def SendToServer():
     while True:

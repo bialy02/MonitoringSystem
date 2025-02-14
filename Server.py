@@ -36,6 +36,13 @@ HTML_TEMPLATE = """
             const tableBody = document.getElementById('data-body');
             tableBody.innerHTML = '';
             data.forEach(item => {
+                let containerTable = '<table border="1">';
+                containerTable += '<tr><th>Nazwa</th><th>Status</th></tr>';
+                item.containers_status.forEach(container => {
+                    containerTable += `<tr><td>${container.name}</td><td>${container.status}</td></tr>`;
+                });
+                containerTable += '</table>';
+                
                 const row = `<tr>
                     <td>${item.host}</td>
                     <td>${item.cpu_usage}</td>
@@ -44,6 +51,7 @@ HTML_TEMPLATE = """
                     <td>${item.process_running ? '✔️' : '❌'}</td>
                     <td>${item.process_version}</td>
                     <td>${item.zombie_status ? '✔️' : '❌'}</td>
+                    <td>${containerTable}</td>
                     <td>${item.timestamp}</td>
                 </tr>`;
                 tableBody.innerHTML += row;
@@ -64,6 +72,7 @@ HTML_TEMPLATE = """
             <th>Proces</th>
             <th>Wersja procesu</th>
             <th>Status Zawieszenia</th>
+            <th>ContainerStatus</th>
             <th>Ostatnia aktualizacja o parametrach klienta</th>
         </tr>
         <tbody id="data-body">
@@ -90,6 +99,7 @@ def data():
     process_running = data[4]
     process_version = data[5]
     zombie_status = data[6]
+    containers_status = data[7]
 
     if host not in [item['host'] for item in data_list]:
         data_list.append({
