@@ -32,21 +32,7 @@ def get_disk_path():
         return "/"
 
 
-def get_latest_podman_version():
-    try:
-        result = subprocess.run(["apt-cache", "policy", "podman"], capture_output=True, text=True, check=True)
-        lines = result.stdout.split("\n")
-        for line in lines:
-            if "Candidate:" in line:
-                avaliable_version = line.split(":")[1].strip()
 
-            if "Installed:" in line:
-                installed_version = line.split(":")[1].strip()
-
-        return (avaliable_version,installed_version)
-    except subprocess.CalledProcessError as e:
-        print(f"Błąd podczas sprawdzania wersji Podmana: {e}")
-    return None
 
 def is_process_running(process_name):
     process_name = process_name.lower()
@@ -66,6 +52,8 @@ def is_process_running(process_name):
         except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
             continue
     return False
+
+
 
 def get_process_zombieStatus(process_name):
     system_platform = platform.system()
@@ -93,14 +81,6 @@ def get_process_version(process_name):
             continue
     return "Version not found"
 
-def podman_update():
-    latest_version, installed_version = get_latest_podman_version()
-    print(f"Latest version: {latest_version}")
-    print(f"Installed version: {installed_version}")
-    if latest_version != installed_version:
-        print("Updating Podman...")
-        subprocess.run(["sudo", "apt", "update"], check=True)
-        subprocess.run(["sudo", "apt", "install", "--only-upgrade", "-y", "podman"], check=True)
 
 
 def get_podman_containers_status():
@@ -113,7 +93,7 @@ def get_podman_containers_status():
                 if len(parts) == 2:
                     name, status = parts
                     name = name.split("/")[-1]
-                    #print(name)
+
                     containers.append({"name": name, "status": status})
         return containers
     except subprocess.CalledProcessError as e:
@@ -150,5 +130,4 @@ def SendToServer():
     time.sleep(INTERVAL)
 
 
-podman_update()
 SendToServer()
